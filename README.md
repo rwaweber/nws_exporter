@@ -1,6 +1,6 @@
 # nws_exporter #
 
-Prometheus exporter for the national weather service rest api
+Prometheus exporter for the national weather service observation api
 
 Documentation can be found
 [here](https://www.weather.gov/documentation/services-web-api).
@@ -8,7 +8,51 @@ Documentation can be found
 The endpoints refresh around once every hour or two.
 It doesn't seem like the interval that it gets updated at is too consistent.
 
+All we are doing here is making a GET request to this URL:
+
+https://api.weather.gov/stations/<Station_Name>/observations/current
+
+A less than perfect way to find a station near you would be to go to
+https://www.weather.gov and click through the map to find where you are,
+and that should land you on a page leading with "Current conditions at
+<City, Location> (Station Name)"
+
+Once you've found the station name, thats all we need to get started. If we
+found the station name to be KRKS an example run would look like:
+
+```
+nws_exporter -station KRKS
+```
+
+
 # Metrics supported
 | name | unit | type |
-|--------------|---------|-------|
-| nws_humidity | percent | guage |
+|--------------|----------|-------|
+| `nws_humidity` | percent  | guage |
+| `nws_barometric_pressure` | pascals | guage |
+| `nws_dewpoint` | celsius | guage |
+| `nws_humidity` | percent | guage |
+| `nws_temperature` | celsius | guage |
+| `nws_visibility` | meters | guage |
+| `nws_wind_direction` | degrees (angle) | guage |
+| `nws_wind_speed` | meters per second (maybe?) | guage |
+
+# Usage
+options:
+```
+Usage of nws_exporter:
+  -addr string
+        nws address (default "api.weather.gov")
+  -backofftime int
+        backofftime in seconds (default 100)
+  -help
+        help info
+  -localaddr string
+        The address to listen on for HTTP requests (default ":8080")
+  -station string
+        nws address (default "KPHL")
+  -timeout int
+        timeout in seconds (default 10)
+  -verbose
+        verbose logging
+```
