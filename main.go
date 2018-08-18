@@ -90,7 +90,7 @@ func main() {
 				backoffseconds := (time.Duration(backofftime) * time.Second)
 				log.Printf("Waiting %v seconds, next scrape at %s", backofftime, time.Now().Add(backoffseconds))
 				time.Sleep(time.Duration(backofftime) * time.Second)
-				break
+				continue
 			}
 			humidity.Set(response.Properties.RelativeHumidity.Value)
 			temperature.Set(response.Properties.Temperature.Value)
