@@ -34,11 +34,14 @@ var (
 		Name:      "dewpoint",
 		Help:      "dewpoint in celsius",
 	})
-	winddirection = prometheus.NewGauge(prometheus.GaugeOpts{
-		Namespace: "nws",
-		Name:      "wind_direction",
-		Help:      "wind direction in degrees",
-	})
+	winddirection = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Namespace: "nws",
+			Name:      "wind_direction",
+			Help:      "wind direction in degrees",
+		},
+		[]string{"Direction"},
+	)
 	windspeed = prometheus.NewGauge(prometheus.GaugeOpts{
 		Namespace: "nws",
 		Name:      "wind_speed",
@@ -95,7 +98,9 @@ func main() {
 			humidity.Set(response.Properties.RelativeHumidity.Value)
 			temperature.Set(response.Properties.Temperature.Value)
 			dewpoint.Set(response.Properties.Dewpoint.Value)
-			winddirection.Set(response.Properties.WindDirection.Value)
+			winddirection.WithLabelValues(
+				CardinalDirection(response.Properties.WindDirection.Value)).Set(
+				response.Properties.WindDirection.Value)
 			windspeed.Set(response.Properties.WindSpeed.Value)
 			barometricpressure.Set(response.Properties.BarometricPressure.Value)
 			visibility.Set(response.Properties.Visibility.Value)

@@ -9,6 +9,8 @@ import (
 	"time"
 )
 
+// ObservationResponse is the json structure returned by the national weather
+// service observations api.
 type ObservationResponse struct {
 	ID       string `json:"id"`
 	Type     string `json:"type"`
@@ -119,8 +121,11 @@ type ObservationResponse struct {
 	} `json:"properties"`
 }
 
+// RetrieveCurrentObservation performs a GET request agains a given national
+// weather service endpoint and returns the ObservationResponse object if the
+// request was successful, and return an error otherwise.
 func RetrieveCurrentObservation(station string, address string, timeout int) (ObservationResponse, error) {
-	requestUrl := url.URL{
+	requestURL := url.URL{
 		Scheme: "https",
 		Host:   address,
 		Path:   fmt.Sprintf("/stations/%s/observations/current", station),
@@ -132,7 +137,7 @@ func RetrieveCurrentObservation(station string, address string, timeout int) (Ob
 
 	response := ObservationResponse{}
 
-	req, err := http.NewRequest("GET", requestUrl.String(), nil)
+	req, err := http.NewRequest("GET", requestURL.String(), nil)
 	if err != nil {
 		return response, err
 	}
@@ -156,4 +161,20 @@ func RetrieveCurrentObservation(station string, address string, timeout int) (Ob
 	}
 
 	return response, err
+}
+
+// CardinalDirection takes a given degree on a 360 degree axis and returns the
+// cardinal direction of the given degree. This being either North, South, East
+// or West.
+func CardinalDirection(degree float64) string {
+	switch {
+	case degree >= 0 && degree < 45 || degree > 315 && degree <= 360:
+		return "North"
+	case degree >= 45 && degree <= 135:
+		return "East"
+	case degree > 135 && degree < 225:
+		return "South"
+	default:
+		return "West"
+	}
 }
