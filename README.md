@@ -45,7 +45,7 @@ directory.
 | `nws_temperature` | celsius | guage |
 | `nws_visibility` | meters | guage |
 | `nws_wind_direction` | degrees (angle) | guage |
-| `nws_wind_speed` | meters per second (maybe?) | guage |
+| `nws_wind_speed` | kilometers per hour | guage |
 
 # Usage
 options:
