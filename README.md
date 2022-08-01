@@ -10,7 +10,7 @@ It doesn't seem like the interval that it gets updated at is too consistent.
 
 All we are doing here is making a GET request to this URL:
 
-https://api.weather.gov/stations/<Station_Name>/observations/current
+https://api.weather.gov/stations/<Station_Name>/observations/latest
 
 A less than perfect way to find a station near you would be to go to
 https://www.weather.gov and click through the map to find where you are,
