@@ -128,7 +128,7 @@ func RetrieveCurrentObservation(station string, address string, timeout int) (Ob
 	requestURL := url.URL{
 		Scheme: "https",
 		Host:   address,
-		Path:   fmt.Sprintf("/stations/%s/observations/current", station),
+		Path:   fmt.Sprintf("/stations/%s/observations/latest", station),
 	}
 
 	client := http.Client{

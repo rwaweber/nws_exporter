@@ -24,6 +24,16 @@ found the station name to be KRKS an example run would look like:
 nws_exporter -station KRKS
 ```
 
+# Installation
+
+```
+git clone https://github.com/rwaweber/nws_exporter
+cd nws_exporter
+go build
+```
+
+After building, the `nws_exporter` executable can be found in the current
+directory.
 
 # Metrics supported
 | name | unit | type |
