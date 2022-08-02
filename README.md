@@ -10,7 +10,7 @@ It doesn't seem like the interval that it gets updated at is too consistent.
 
 All we are doing here is making a GET request to this URL:
 
-https://api.weather.gov/stations/<Station_Name>/observations/current
+https://api.weather.gov/stations/<Station_Name>/observations/latest
 
 A less than perfect way to find a station near you would be to go to
 https://www.weather.gov and click through the map to find where you are,
@@ -24,6 +24,16 @@ found the station name to be KRKS an example run would look like:
 nws_exporter -station KRKS
 ```
 
+# Installation
+
+```
+git clone https://github.com/rwaweber/nws_exporter
+cd nws_exporter
+go build
+```
+
+After building, the `nws_exporter` executable can be found in the current
+directory.
 
 # Metrics supported
 | name | unit | type |
@@ -35,7 +45,7 @@ nws_exporter -station KRKS
 | `nws_temperature` | celsius | guage |
 | `nws_visibility` | meters | guage |
 | `nws_wind_direction` | degrees (angle) | guage |
-| `nws_wind_speed` | meters per second (maybe?) | guage |
+| `nws_wind_speed` | kilometers per hour | guage |
 
 # Usage
 options:

@@ -45,7 +45,7 @@ var (
 	windspeed = prometheus.NewGauge(prometheus.GaugeOpts{
 		Namespace: "nws",
 		Name:      "wind_speed",
-		Help:      "wind speed in maybe meters per second?",
+		Help:      "wind speed in kilometers per hour",
 	})
 	barometricpressure = prometheus.NewGauge(prometheus.GaugeOpts{
 		Namespace: "nws",
