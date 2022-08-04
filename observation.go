@@ -62,9 +62,9 @@ type ObservationResponse struct {
 			QualityControl string  `json:"qualityControl"`
 		} `json:"barometricPressure"`
 		SeaLevelPressure struct {
-			Value          interface{} `json:"value"`
-			UnitCode       string      `json:"unitCode"`
-			QualityControl string      `json:"qualityControl"`
+			Value          float64    `json:"value"`
+			UnitCode       string `json:"unitCode"`
+			QualityControl string `json:"qualityControl"`
 		} `json:"seaLevelPressure"`
 		Visibility struct {
 			Value          float64 `json:"value"`

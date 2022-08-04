@@ -52,6 +52,11 @@ var (
 		Name:      "barometric_pressure",
 		Help:      "barometric pressure in pascals",
 	})
+	sealevelpressure = prometheus.NewGauge(prometheus.GaugeOpts{
+		Namespace: "nws",
+		Name:      "sealevel_pressure",
+		Help:      "sealevel pressure in pascals",
+	})
 	visibility = prometheus.NewGauge(prometheus.GaugeOpts{
 		Namespace: "nws",
 		Name:      "visibility",
@@ -74,6 +79,7 @@ func init() {
 	prometheus.MustRegister(winddirection)
 	prometheus.MustRegister(windspeed)
 	prometheus.MustRegister(barometricpressure)
+	prometheus.MustRegister(sealevelpressure)
 	prometheus.MustRegister(visibility)
 }
 
@@ -104,6 +110,7 @@ func main() {
 				response.Properties.WindDirection.Value)
 			windspeed.Set(response.Properties.WindSpeed.Value)
 			barometricpressure.Set(response.Properties.BarometricPressure.Value)
+			sealevelpressure.Set(response.Properties.SeaLevelPressure.Value)
 			visibility.Set(response.Properties.Visibility.Value)
 			if verbose {
 				log.Printf("Waiting %v seconds, next scrape at %s", backofftime, time.Now().Add(
