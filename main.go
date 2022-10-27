@@ -22,7 +22,7 @@ var (
 	humidity = prometheus.NewGauge(prometheus.GaugeOpts{
 		Namespace: "nws",
 		Name:      "humidity",
-		Help:      "humidity guage percentage",
+		Help:      "humidity gauge percentage",
 	})
 	temperature = prometheus.NewGauge(prometheus.GaugeOpts{
 		Namespace: "nws",
