@@ -66,7 +66,7 @@ var (
 
 func init() {
 	flag.StringVar(&station, "station", "KPHL", "nws address")
-	flag.StringVar(&localaddr, "localaddr", "127.0.0.1:8080", "The address to listen on for HTTP requests")
+	flag.StringVar(&localaddr, "localaddr", ":8080", "The address to listen on for HTTP requests")
 	flag.StringVar(&address, "addr", "api.weather.gov", "nws address")
 	flag.BoolVar(&help, "help", false, "help info")
 	flag.BoolVar(&verbose, "verbose", false, "verbose logging")
