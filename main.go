@@ -17,6 +17,7 @@ var (
 	help                 bool
 	verbose              bool
 	timeout, backofftime int
+	failfast             bool
 	localaddr            string
 
 	humidity = prometheus.NewGauge(prometheus.GaugeOpts{
@@ -72,6 +73,7 @@ func init() {
 	flag.BoolVar(&verbose, "verbose", false, "verbose logging")
 	flag.IntVar(&timeout, "timeout", 10, "timeout in seconds")
 	flag.IntVar(&backofftime, "backofftime", 100, "backofftime in seconds")
+	flag.BoolVar(&failfast, "failfast", false, "Exit quickly on errors")
 	flag.Parse()
 	prometheus.MustRegister(humidity)
 	prometheus.MustRegister(temperature)
@@ -96,6 +98,10 @@ func main() {
 		for {
 			response, err := RetrieveCurrentObservation(station, address, timeout)
 			if err != nil {
+				if failfast {
+					log.Fatalf("error: %v", err)
+				}
+
 				log.Printf("Problem retrieving from: %s at station %s: %s", address, station, err)
 				backoffseconds := (time.Duration(backofftime) * time.Second)
 				log.Printf("Waiting %v seconds, next scrape at %s", backofftime, time.Now().Add(backoffseconds))
