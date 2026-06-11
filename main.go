@@ -63,6 +63,11 @@ var (
 		Name:      "visibility",
 		Help:      "visibility in meters",
 	})
+	timeSinceUpdate = prometheus.NewGauge(prometheus.GaugeOpts{
+		Namespace: "nws",
+		Name:      "time_since_update",
+		Help:      "sesconds since last nws update",
+	})
 )
 
 func init() {
@@ -83,6 +88,7 @@ func init() {
 	prometheus.MustRegister(barometricpressure)
 	prometheus.MustRegister(sealevelpressure)
 	prometheus.MustRegister(visibility)
+	prometheus.MustRegister(timeSinceUpdate)
 }
 
 func main() {
@@ -96,7 +102,7 @@ func main() {
 	// start scrape loop
 	go func() {
 		for {
-			response, err := RetrieveCurrentObservation(station, address, timeout)
+			response, rawJSON, err := RetrieveCurrentObservation(station, address, timeout)
 			if err != nil {
 				if failfast {
 					log.Fatalf("error: %v", err)
@@ -108,16 +114,60 @@ func main() {
 				time.Sleep(time.Duration(backofftime) * time.Second)
 				continue
 			}
-			humidity.Set(response.Properties.RelativeHumidity.Value)
-			temperature.Set(response.Properties.Temperature.Value)
-			dewpoint.Set(response.Properties.Dewpoint.Value)
-			winddirection.WithLabelValues(
-				CardinalDirection(response.Properties.WindDirection.Value)).Set(
-				response.Properties.WindDirection.Value)
-			windspeed.Set(response.Properties.WindSpeed.Value)
-			barometricpressure.Set(response.Properties.BarometricPressure.Value)
-			sealevelpressure.Set(response.Properties.SeaLevelPressure.Value)
-			visibility.Set(response.Properties.Visibility.Value)
+
+			if verbose {
+				log.Printf("raw json response: %s", rawJSON)
+			}
+
+			timeSinceUpdate.Set(time.Since(response.Properties.Timestamp).Seconds())
+
+			var missingProperties []string
+			if response.Properties.RelativeHumidity != nil && response.Properties.RelativeHumidity.Value != nil {
+				humidity.Set(*response.Properties.RelativeHumidity.Value)
+			} else {
+				missingProperties = append(missingProperties, "RelativeHumidity")
+			}
+			if response.Properties.Temperature != nil && response.Properties.Temperature.Value != nil {
+				temperature.Set(*response.Properties.Temperature.Value)
+			} else {
+				missingProperties = append(missingProperties, "Temperature")
+			}
+			if response.Properties.Dewpoint != nil && response.Properties.Dewpoint.Value != nil {
+				dewpoint.Set(*response.Properties.Dewpoint.Value)
+			} else {
+				missingProperties = append(missingProperties, "Dewpoint")
+			}
+			if response.Properties.WindDirection != nil && response.Properties.WindDirection.Value != nil {
+				winddirection.WithLabelValues(
+					CardinalDirection(*response.Properties.WindDirection.Value)).Set(
+					*response.Properties.WindDirection.Value)
+			} else {
+				missingProperties = append(missingProperties, "WindDirection")
+			}
+			if response.Properties.WindSpeed != nil && response.Properties.WindSpeed.Value != nil {
+				windspeed.Set(*response.Properties.WindSpeed.Value)
+			} else {
+				missingProperties = append(missingProperties, "WindSpeed")
+			}
+			if response.Properties.BarometricPressure != nil && response.Properties.BarometricPressure.Value != nil {
+				barometricpressure.Set(*response.Properties.BarometricPressure.Value)
+			} else {
+				missingProperties = append(missingProperties, "BarometricPressure")
+			}
+			if response.Properties.SeaLevelPressure != nil && response.Properties.SeaLevelPressure.Value != nil {
+				sealevelpressure.Set(*response.Properties.SeaLevelPressure.Value)
+			} else {
+				missingProperties = append(missingProperties, "SeaLevelPressure")
+			}
+			if response.Properties.Visibility != nil && response.Properties.Visibility.Value != nil {
+				visibility.Set(*response.Properties.Visibility.Value)
+			} else {
+				missingProperties = append(missingProperties, "Visibility")
+			}
+			if len(missingProperties) != 0 {
+				log.Printf("some properties are missing in the response: %v", missingProperties)
+			}
+
 			if verbose {
 				log.Printf("Waiting %v seconds, next scrape at %s", backofftime, time.Now().Add(
 					time.Duration(backofftime)*time.Second).String())
@@ -125,6 +175,13 @@ func main() {
 			time.Sleep(time.Duration(backofftime) * time.Second)
 		}
 	}()
+
+	// Push metrics to TimescaleDB via OTLP in addition to /metrics.
+	if stop, err := startOTLPPush(prometheus.DefaultGatherer); err != nil {
+		log.Printf("OTLP push disabled: %v", err)
+	} else {
+		defer stop()
+	}
 
 	http.Handle("/metrics", promhttp.Handler())
 	log.Fatal(http.ListenAndServe(localaddr, nil))
