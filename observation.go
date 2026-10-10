@@ -25,12 +25,12 @@ type ObservationResponse struct {
 			Value    int    `json:"value"`
 			UnitCode string `json:"unitCode"`
 		} `json:"elevation"`
-		Station         string        `json:"station"`
-		Timestamp       time.Time     `json:"timestamp"`
-		RawMessage      string        `json:"rawMessage"`
-		TextDescription string        `json:"textDescription"`
-		Icon            string        `json:"icon"`
-		PresentWeather  []interface{} `json:"presentWeather"`
+		Station         string    `json:"station"`
+		Timestamp       time.Time `json:"timestamp"`
+		RawMessage      string    `json:"rawMessage"`
+		TextDescription string    `json:"textDescription"`
+		Icon            string    `json:"icon"`
+		PresentWeather  []any     `json:"presentWeather"`
 		Temperature     struct {
 			Value          float64 `json:"value"`
 			UnitCode       string  `json:"unitCode"`
@@ -52,9 +52,9 @@ type ObservationResponse struct {
 			QualityControl string  `json:"qualityControl"`
 		} `json:"windSpeed"`
 		WindGust struct {
-			Value          interface{} `json:"value"`
-			UnitCode       string      `json:"unitCode"`
-			QualityControl string      `json:"qualityControl"`
+			Value          any    `json:"value"`
+			UnitCode       string `json:"unitCode"`
+			QualityControl string `json:"qualityControl"`
 		} `json:"windGust"`
 		BarometricPressure struct {
 			Value          float64 `json:"value"`
@@ -72,29 +72,29 @@ type ObservationResponse struct {
 			QualityControl string  `json:"qualityControl"`
 		} `json:"visibility"`
 		MaxTemperatureLast24Hours struct {
-			Value          interface{} `json:"value"`
-			UnitCode       string      `json:"unitCode"`
-			QualityControl interface{} `json:"qualityControl"`
+			Value          any    `json:"value"`
+			UnitCode       string `json:"unitCode"`
+			QualityControl any    `json:"qualityControl"`
 		} `json:"maxTemperatureLast24Hours"`
 		MinTemperatureLast24Hours struct {
-			Value          interface{} `json:"value"`
-			UnitCode       string      `json:"unitCode"`
-			QualityControl interface{} `json:"qualityControl"`
+			Value          any    `json:"value"`
+			UnitCode       string `json:"unitCode"`
+			QualityControl any    `json:"qualityControl"`
 		} `json:"minTemperatureLast24Hours"`
 		PrecipitationLastHour struct {
-			Value          interface{} `json:"value"`
-			UnitCode       string      `json:"unitCode"`
-			QualityControl string      `json:"qualityControl"`
+			Value          any    `json:"value"`
+			UnitCode       string `json:"unitCode"`
+			QualityControl string `json:"qualityControl"`
 		} `json:"precipitationLastHour"`
 		PrecipitationLast3Hours struct {
-			Value          interface{} `json:"value"`
-			UnitCode       string      `json:"unitCode"`
-			QualityControl string      `json:"qualityControl"`
+			Value          any    `json:"value"`
+			UnitCode       string `json:"unitCode"`
+			QualityControl string `json:"qualityControl"`
 		} `json:"precipitationLast3Hours"`
 		PrecipitationLast6Hours struct {
-			Value          interface{} `json:"value"`
-			UnitCode       string      `json:"unitCode"`
-			QualityControl string      `json:"qualityControl"`
+			Value          any    `json:"value"`
+			UnitCode       string `json:"unitCode"`
+			QualityControl string `json:"qualityControl"`
 		} `json:"precipitationLast6Hours"`
 		RelativeHumidity struct {
 			Value          float64 `json:"value"`
@@ -102,9 +102,9 @@ type ObservationResponse struct {
 			QualityControl string  `json:"qualityControl"`
 		} `json:"relativeHumidity"`
 		WindChill struct {
-			Value          interface{} `json:"value"`
-			UnitCode       string      `json:"unitCode"`
-			QualityControl string      `json:"qualityControl"`
+			Value          any    `json:"value"`
+			UnitCode       string `json:"unitCode"`
+			QualityControl string `json:"qualityControl"`
 		} `json:"windChill"`
 		HeatIndex struct {
 			Value          float64 `json:"value"`
